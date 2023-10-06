@@ -1,0 +1,16 @@
+{
+  "name": "psst-component",
+  "version": "0.0.0",
+  "description": "Files for PSST component",
+  "author": "https://github.com/shivankaul",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-license-header": "^0.6.0",
+    "eslint-plugin-licenses": "^1.0.2",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
