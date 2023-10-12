@@ -17,7 +17,7 @@ const startApplyingPolicy = (psstObj) => {
 }
 
 // Main execution logic.
-(() => {
+(async () => {
   console.log('[PSST] Twitter policy script')
   // Get psst variables from local storage.
   const psst = localStorage.getItem('psst')
@@ -54,7 +54,7 @@ const startApplyingPolicy = (psstObj) => {
     console.log(`[PSST] In policy.js, not doing anything for ${curUrl} because of testing error.`)
   } else {
     try {
-      waitForCheckboxToLoadWithTimeout(3000, true /* turnOff */)
+      await waitForCheckboxToLoadWithTimeout(3000, true /* turnOff */)
     } catch (e) {
       // We simply log the error and continue to the next URL.
       psstObj.errors[window.location.href] = e.message
