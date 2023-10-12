@@ -4,6 +4,9 @@
   "description": "Files for PSST component",
   "author": "https://github.com/shivankaul",
   "license": "MPL-2.0",
+  "scripts": {
+    "fix": "eslint scripts/ --fix"
+  },
   "devDependencies": {
     "eslint": "^8.51.0",
     "eslint-config-standard": "^17.1.0",

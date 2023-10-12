@@ -8,15 +8,5 @@
         "version": 1,
         "test_script": "twitter/test.js",
         "policy_script": "twitter/policy.js"
-    },
-    {
-        "include": [
-            "*://www.linkedin.com/*"
-        ],
-        "exclude": [
-        ],
-        "version": 1,
-        "test_script": "linkedin/test.js",
-        "policy_script": "linkedin/policy.js"
     }
 ]

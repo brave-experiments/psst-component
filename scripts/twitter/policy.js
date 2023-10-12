@@ -2,67 +2,72 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at https://mozilla.org/MPL/2.0/.
-console.log('This is the twitter policy script')
 
-const check_the_box = () => {
-  console.log('Checking the box')
-  const checkboxes = document.querySelectorAll("input[type='checkbox']")
-  if (checkboxes.length === 1) {
-    checkboxes[0].checked = true
-    return true
-  } else {
-    return false
+// See twitter/test.js for more information.
+
+const startApplyingPolicy = (psstObj) => {
+  const curUrl = window.location.href
+  const urls = SETTINGS_URLS
+  const nextUrl = urls.pop()
+  psstObj.state = 'applying-policy'
+  psstObj.urls_to_go_to = urls
+  psstObj.start_url = curUrl
+
+  return [psstObj, nextUrl]
+}
+
+// Main execution logic.
+(() => {
+  console.log('[PSST] Twitter policy script')
+  // Get psst variables from local storage.
+  const psst = localStorage.getItem('psst')
+
+  if (!psst) {
+    // We should only apply policy if the testing results are accurate,
+    // give up.
+    console.log('[PSST] In policy.js, no psst variable found in local storage')
+    return
   }
-}
 
-// Function to navigate to a URL with a random delay and return a promise
-const navigateWithRandomDelayAndPromise = async (url) => {
-  const randomDelay = Math.floor(Math.random() * (3000 - 500 + 1) + 500)
+  // We modify this JSON object in place and only save at end.
+  const psstObj = JSON.parse(psst)
+  if (!psstObj) {
+    console.log('[PSST] Could not parse psst object')
+    return
+  }
 
-  console.log(`Navigating to ${url} after a delay of ${randomDelay} milliseconds`)
+  if (psstObj.state === 'done-applying-policy') {
+    console.log('[PSST] Done applying policy')
+    return
+  }
+  if (psstObj.state === 'done-testing') {
+    // Start applying policy.
+    const [psst, nextUrl] = startApplyingPolicy(psstObj)
+    saveAndGoToNextUrl(psst, nextUrl)
+    return
+  }
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      window.onload = () => {
-        resolve()
-      }
-      window.location.href = url
-    }, randomDelay)
-  })
-}
+  // Check if current URL is in the errors object.
+  if (psstObj.errors[window.location.href]) {
+    // We simply log the error and continue to the next URL.
+    const curUrl = window.location.href
+    console.log(`[PSST] In policy.js, not doing anything for ${curUrl} because of testing error.`)
+  } else {
+    try {
+      waitForCheckboxToLoadWithTimeout(3000, true /* turnOff */)
+    } catch (e) {
+      // We simply log the error and continue to the next URL.
+      psstObj.errors[window.location.href] = e.message
+    }
+  }
 
-const urlsToGoTo = [
-  'https://twitter.com/home',
-  'https://twitter.com/settings/ads_preferences',
-  'https://twitter.com/settings/off_twitter_activity',
-  'https://twitter.com/settings/data_sharing_with_business_partners',
-  'https://twitter.com/settings/location_information'
-]
+  let nextUrl = psstObj.urls_to_go_to.pop()
+  if (!nextUrl) {
+    // We're done
+    console.log('[PSST] Done applying policy')
+    psstObj.state = 'done-applying-policy'
+    nextUrl = psstObj.start_url
+  }
 
-const curUrl = window.location.href
-
-// Check if we are on the twitter settings page
-if (urlsToGoTo.includes(curUrl)) {
-  checkTheBox()
-}
-
-// Check for urlsToGoTo in local storage
-if (localStorage.getItem('urlsToGoTo')) {
-  console.log('Found urlsToGoTo in local storage')
-  const urlsToGoTo = JSON.parse(localStorage.getItem('urlsToGoTo'))
-} else {
-  console.log("Didn't find urlsToGoTo in local storage")
-  localStorage.setItem('urlsToGoTo', JSON.stringify(urlsToGoTo))
-}
-
-const nextUrl = urlsToGoTo.pop()
-
-// Save the urls_to_go_to to local storage
-localStorage.setItem('urls_to_go_to', JSON.stringify(urls_to_go_to))
-
-// navigate to the url
-const navigateToNextUrl = async () => {
-  await navigateWithRandomDelayAndPromise(next_url)
-}
-
-navigateToNextUrl()
+  saveAndGoToNextUrl(psstObj, nextUrl)
+})()
