@@ -1,6 +1,6 @@
 # PSST Component
 
-For local testing, add this to your Profiles directory, under `lhhcaamjbmbijmjbnnodjaknblkiagon`.
+For local testing, add this "component" to your Profiles directory, under `lhhcaamjbmbijmjbnnodjaknblkiagon`. On MacOS, this is at `~/Library/Application\ Support/BraveSoftware/Brave-Browser-Development/`. 
 
 ```
 lhhcaamjbmbijmjbnnodjaknblkiagon/1/
