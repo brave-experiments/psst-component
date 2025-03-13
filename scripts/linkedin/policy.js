@@ -6,19 +6,18 @@
 // Script Receives as parameter the next data from the user script:
 // {
 //    "requests": [ {
-//       "description": "Ads Preferences",
-//       "url": "https://x.com/settings/ads_preferences"
+//        url:'https://www.linkedin.com/mypreferences/d/member-cookies',
+//        description: 'Disable cookies'
 //    }, {
-//       "description": "Twitter Activity",
-//       "url": "https://x.com/settings/off_twitter_activity"
-//    }, {
-//       "description": "Data sharing with business partners",
-//       "url": "https://x.com/settings/data_sharing_with_business_partners"
-//    }, {
-//       "description": "Location",
-//       "url": "https://x.com/settings/location"
+//       url:'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
+//       description: 'Disable your data sharing with third parties'
+//    },
+//       .....
+//    {
+//       url:'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business',
+//       description: 'Advertiser data for ads'
 //    } ],
-//    "user": "u%3D2637575963"
+//    "user": "user-name-7a8394356"
 // }
 // and uses 'requests' - as list of policy settings tasks to apply
 // 'user' -  user identifier extracted by the user script
@@ -27,14 +26,14 @@
 // psst = {
 //   state: 'applying-policy|done-applying-policy',
 //   urls_to_go_to: [
-//     'https://twitter.com/settings/ads_preferences',
-//     'https://twitter.com/settings/off_twitter_activity',
-//     'https://twitter.com/settings/data_sharing_with_business_partners',
-//     'https://twitter.com/settings/location_information'
+//     'https://www.linkedin.com/mypreferences/d/member-cookies'',
+//     'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
+//     ......
+//     'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business'
 //   ],
-//   start_url: 'https://twitter.com/home'
+//   start_url: 'https://www.linkedin.com/feed'
 //   errors: {
-//     'https://twitter.com/settings/ads_preferences': 'error message'
+//     'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business': 'error message'
 //  }
 // }
 // It will be used for every next script execution as

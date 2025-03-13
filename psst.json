@@ -1,12 +1,24 @@
 [
     {
+        "name": "twitter",
         "include": [
-            "https://twitter.com/*"
+            "https://x.com/*"
+        ],
+        "exclude": [
+        ],
+        "version": 4,
+        "user_script": "user.js",
+        "policy_script": "policy.js"
+    },
+    {
+        "name": "linkedin",
+        "include": [
+            "https://www.linkedin.com/*"
         ],
         "exclude": [
         ],
         "version": 1,
-        "test_script": "twitter/test.js",
-        "policy_script": "twitter/policy.js"
+        "user_script": "user.js",
+        "policy_script": "policy.js"
     }
 ]
