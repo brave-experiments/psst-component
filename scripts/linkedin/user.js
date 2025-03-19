@@ -4,14 +4,19 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 /*
- * Extracts end returns the Twitter user ID
+ * Extracts end returns the LinkedIn user ID
  * Returns the dictionary object:
  * {
- *  "user": <twid>,
- *  "state": 'testing|done-testing|applying-policy|done-applying-policy'
- *
+ *  "user": <linkedin user ID>,
+ *  "requests": [
+ *    {
+ *      url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
+ *      description: 'Disable cookies'
+ *    },
+ *    .............
+ *  ]
  * }
- * In ca the twid extracting is impossible it must return null
+ * In ca the <linkedin user ID> extracting is impossible it must return null
  */
 ;(() => {
   const SIGNED_USER_LS_KEY_NAME = 'voyager'

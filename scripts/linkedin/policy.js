@@ -84,7 +84,8 @@ const start = () => {
     start_url: curUrl,
     progress: calculatePercent(urlData),
     applyingTask: nextUrlData,
-    errors: {}
+    errors: {},
+    applied:[]
   }
   return [psst, nextUrlData.url, nextUrlData.description]
 }
@@ -96,7 +97,7 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
 }
 
 // Main execution logic.
-;(async () => {
+(async () => {
   // Get psst variables from local storage.
   const psst = window.parent.localStorage.getItem('psst')
 
@@ -131,9 +132,13 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
       WAIT_FOR_PAGE_TIMEOUT,
       true /* turnOff */
     )
+    const applyingTask = psstObj.applyingTask
+    if(applyingTask) {
+      psstObj.applied.push(psstObj.applyingTask.description)
+    }
   } catch (e) {
     // We simply log the error and continue to the next URL.
-    psstObj.errors[window.location.href] = e
+    psstObj.errors[psstObj.applyingTask.url] = e
   }
 
   const nextUrlData = psstObj.urls_to_go_to.shift()

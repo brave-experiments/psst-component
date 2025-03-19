@@ -13,7 +13,7 @@
  * }
  * In ca the twid extracting is impossible it must return null
  */
-;(() => {
+(() => {
   const TWID_COOKIE_NAME = 'twid'
 
   const getTwId = () => {
