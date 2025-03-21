@@ -4,20 +4,26 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 /*
- * Extracts end returns the Twitter user ID
- * Returns the dictionary object:
- * {
- *  "user": <twid>,
- *  "state": 'testing|done-testing|applying-policy|done-applying-policy'
- *
- * }
- * In ca the twid extracting is impossible it must return null
- */
+ Extracts end returns the Twitter user ID
+ Returns the dictionary object:
+ {
+  "user": <twid>,
+  "tasks": { 
+      {
+        url:<setting url, MUST BE UNIQUE>,
+        description:<setting description>},
+      },
+       .... 
+  }
+
+ }
+ In ca the twid extracting is impossible it must return null
+*/
+
 (() => {
   const TWID_COOKIE_NAME = 'twid'
 
   const getTwId = () => {
-    console.log('[PSST] Extracting twid V3')
     return document.cookie
       .split('; ')
       .find(row => row.startsWith(TWID_COOKIE_NAME))
@@ -26,7 +32,7 @@
 
   return {
     user: getTwId(),
-    requests: [
+    tasks: [
       {
         url: 'https://x.com/settings/location',
         description: 'Location'

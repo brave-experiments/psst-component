@@ -4,21 +4,22 @@
 // You can obtain one at https://mozilla.org/MPL/2.0/.
 
 /*
- * Extracts end returns the LinkedIn user ID
- * Returns the dictionary object:
- * {
- *  "user": <linkedin user ID>,
- *  "requests": [
- *    {
- *      url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
- *      description: 'Disable cookies'
- *    },
- *    .............
- *  ]
- * }
- * In ca the <linkedin user ID> extracting is impossible it must return null
- */
-;(() => {
+Extracts end returns the LinkedIn user ID
+Returns the dictionary object:
+{
+"user": <linkedin user ID>,
+"tasks": [
+  {
+    url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
+    description: 'Disable cookies'
+  },
+  .............
+]
+}
+In ca the <linkedin user ID> extracting is impossible it must return null
+*/
+
+(() => {
   const SIGNED_USER_LS_KEY_NAME = 'voyager'
   const PSST_PUBLIC_ID_COOKIE_NAME = 'psst_public_identifier'
   const CODE_ELEM_JSON_IDENTIFIER =
@@ -59,10 +60,9 @@
       return null
     }
   }
-  console.log('[PSST] linkedin user:', getUid())
   return {
     user: getUid(),
-    requests: [
+    tasks: [
       {
         url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
         description: 'Disable cookies'
@@ -75,26 +75,26 @@
         url: 'https://www.linkedin.com/mypreferences/d/settings/ads-location',
         description: 'Profile Location'
       },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/linked-in-activity-data',
-        description: 'LinkedIn activity data'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-inferred-location',
-        description: 'Ads based on Inferred city location'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/interest-categories',
-        description: 'Ads based on Inferred interests and traits'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-age',
-        description: 'Ads based on Inferred age range'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-gender',
-        description: 'Ads based on Inferred gender'
-      },
+          {
+            url: 'https://www.linkedin.com/mypreferences/d/settings/linked-in-activity-data',
+            description: 'LinkedIn activity data'
+          },
+          {
+            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-inferred-location',
+            description: 'Ads based on Inferred city location'
+          },
+          {
+            url: 'https://www.linkedin.com/mypreferences/d/interest-categories',
+            description: 'Ads based on Inferred interests and traits'
+          },
+          {
+            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-age',
+            description: 'Ads based on Inferred age range'
+          },
+          {
+            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-gender',
+            description: 'Ads based on Inferred gender'
+          },
       {
         url: 'https://www.linkedin.com/mypreferences/d/settings/ads-beyond-linkedin',
         description: 'Ad Partners Data for Ads off LinkedIn'

@@ -2,55 +2,68 @@
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at https://mozilla.org/MPL/2.0/.
-//
-// Script Receives as parameter the next data from the user script:
-// {
-//    "requests": [ {
-//        url:'https://www.linkedin.com/mypreferences/d/member-cookies',
-//        description: 'Disable cookies'
-//    }, {
-//       url:'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
-//       description: 'Disable your data sharing with third parties'
-//    },
-//       .....
-//    {
-//       url:'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business',
-//       description: 'Advertiser data for ads'
-//    } ],
-//    "user": "user-name-7a8394356"
-// }
-// and uses 'requests' - as list of policy settings tasks to apply
-// 'user' -  user identifier extracted by the user script
-//
-// If local storage contains the data with 'psst' key:
-// psst = {
-//   state: 'applying-policy|done-applying-policy',
-//   urls_to_go_to: [
-//     'https://www.linkedin.com/mypreferences/d/member-cookies'',
-//     'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
-//     ......
-//     'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business'
-//   ],
-//   start_url: 'https://www.linkedin.com/feed'
-//   errors: {
-//     'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business': 'error message'
-//  }
-// }
-// It will be used for every next script execution as
 
-const SETTINGS_URLS_LENGTH = params.requests?.length ?? 0
+/*
+Script Receives as parameter the next data from the user script:
+{
+   "tasks": [ {
+       url:'https://www.linkedin.com/mypreferences/d/member-cookies',
+       description: 'Disable cookies'
+   }, {
+      url:'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
+      description: 'Disable your data sharing with third parties'
+   },
+      .....
+   {
+      url:'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business',
+      description: 'Advertiser data for ads'
+   } ],
+   "user": "user-name-7a8394356"
+}
+and uses 'tasks' - as list of policy settings tasks to apply
+'user' -  user identifier extracted by the user script
+
+If local storage contains the data with 'psst' key:
+psst = {
+  state: 'applying-policy|done-applying-policy',
+  tasks_list: [
+    'https://www.linkedin.com/mypreferences/d/member-cookies'',
+    'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
+    ......
+    'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business'
+  ],
+  start_url: 'https://www.linkedin.com/feed'
+  errors: {
+    'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business': 'error message'
+ }
+}
+It will be used for every next script execution as
+*/
+
+// Timeout to wait of the URL opening
 const WAIT_FOR_PAGE_TIMEOUT = 3000
 
-// Use requests as list of the policy settings tasks to apply
-const SETTINGS_URLS = params.requests
+// Use tasks as list of the policy settings tasks to apply
+const PSST_TASKS = params.tasks
+const PSST_TASKS_LENGTH = params.tasks?.length ?? 0
+
+// Flag which is present only for the first (initial) execution of the policy script
+const PSST_INITIAL_EXECUTION_FLAG = params.initial_execution ?? false
+
+// State of operations
+const psstState = {
+  STARTED: "started",
+  COMPLETED: "completed"
+}
 
 /* Helper functions */
 const goToUrl = url => {
   window.location.href = url
 }
+
 const checkCheckboxes = (resolve, reject, turnOff) => {
   const checkboxes = document.querySelectorAll("input[type='checkbox']")
-  if (checkboxes.length === 1) {
+  if (checkboxes.length !== 0) {
     if (turnOff) {
       if (checkboxes[0].checked) {
         // Uncheck it
@@ -70,24 +83,24 @@ const waitForCheckboxToLoadWithTimeout = (timeout, turnOff) => {
     }, timeout)
   })
 }
-const calculatePercent = urls => {
-  return 1 - urls.length / SETTINGS_URLS_LENGTH
+const calculateProgress = tasks => {
+  return 1 - tasks.length / PSST_TASKS_LENGTH
 }
 
 const start = () => {
   const curUrl = window.location.href
-  const urlData = SETTINGS_URLS
-  const nextUrlData = urlData.shift()
+  const tasks = PSST_TASKS
+  const next_task = tasks.shift()
   const psst = {
-    state: 'applying-policy',
-    urls_to_go_to: urlData,
+    state: psstState.STARTED,
+    tasks_list: tasks,
     start_url: curUrl,
-    progress: calculatePercent(urlData),
-    applyingTask: nextUrlData,
+    progress: calculateProgress(tasks),
+    current_task: next_task,
     errors: {},
     applied:[]
   }
-  return [psst, nextUrlData.url, nextUrlData.description]
+  return [psst, next_task.url]
 }
 const saveAndGoToNextUrl = (psst, nextUrl) => {
   // Save the psst object to local storage.
@@ -101,9 +114,9 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
   // Get psst variables from local storage.
   const psst = window.parent.localStorage.getItem('psst')
 
-  if (!psst) {
+  if (!psst || PSST_INITIAL_EXECUTION_FLAG) {
     // Start applying-policy
-    const [psst, nextUrl, nextDescription] = start()
+    const [psst, nextUrl] = start()
     saveAndGoToNextUrl(psst, nextUrl)
     return {
       result: false,
@@ -119,7 +132,7 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
     }
   }
 
-  if (psstObj.state === 'done-applying-policy') {
+  if (psstObj.state === psstState.COMPLETED) {
     // Invoke the policy script
     return {
       result: true,
@@ -132,26 +145,29 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
       WAIT_FOR_PAGE_TIMEOUT,
       true /* turnOff */
     )
-    const applyingTask = psstObj.applyingTask
-    if(applyingTask) {
-      psstObj.applied.push(psstObj.applyingTask.description)
+    const current_task = psstObj.current_task
+    if(current_task) {
+      psstObj.applied.push(psstObj.current_task)
     }
   } catch (e) {
     // We simply log the error and continue to the next URL.
-    psstObj.errors[psstObj.applyingTask.url] = e
+    psstObj.errors[psstObj.current_task.url] = {
+      description: psstObj.current_task.description,
+      error: e
+    }
   }
 
-  const nextUrlData = psstObj.urls_to_go_to.shift()
+  const next_task = psstObj.tasks_list.shift()
   let nextUrl = null
-  if (!nextUrlData) {
-    psstObj.state = 'done-applying-policy'
+  if (!next_task) {
+    psstObj.state = psstState.COMPLETED
     nextUrl = psstObj.start_url
   } else {
-    nextUrl = nextUrlData.url
+    nextUrl = next_task.url
   }
 
-  psstObj.progress = calculatePercent(psstObj.urls_to_go_to)
-  psstObj.applyingTask = nextUrlData
+  psstObj.progress = calculateProgress(psstObj.tasks_list)
+  psstObj.current_task = next_task
 
   saveAndGoToNextUrl(psstObj, nextUrl)
   return {
