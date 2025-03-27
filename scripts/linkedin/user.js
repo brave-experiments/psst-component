@@ -20,10 +20,15 @@ In ca the <linkedin user ID> extracting is impossible it must return null
 */
 
 (() => {
+  // Flag which is present only for the first (initial) execution of the policy script
+  const PSST_INITIAL_EXECUTION_FLAG = params.initial_execution ?? false
+
   const SIGNED_USER_LS_KEY_NAME = 'voyager'
   const PSST_PUBLIC_ID_COOKIE_NAME = 'psst_public_identifier'
   const CODE_ELEM_JSON_IDENTIFIER =
     'com.linkedin.voyager.identity.shared.PublicContactInfo'
+
+  const psst = window.parent.localStorage.getItem('psst')
 
   const hasLocalStorageKeyStartingWith = prefix =>
     Object.keys(localStorage).some(key => key.startsWith(prefix))

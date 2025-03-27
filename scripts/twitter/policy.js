@@ -96,12 +96,17 @@ const waitForCheckboxToLoadWithTimeout = (timeout, turnOff) => {
   })
 }
 
-const getProcessedTasks = (psst) => {
-    return psst.applied?.length ?? 0 + psst.errors?.length ?? 0
+const getAvailableTasks = (psst) => {
+  const tasksInList = (psst?.tasks_list?.length ?? 0)
+  return tasksInList + ((psst?.current_task ?? null) === null ? 0 : 1)
 }
 
-const calculateProgress = psstTasksDone => {
-  return 1 - psstTasksDone / PSST_TASKS_LENGTH
+const getProcessedTasks = (psst) => {
+    return (psst?.applied?.length ?? 0) + (psst?.errors?.length ?? 0)
+}
+
+const calculateProgress = (processedTasks, availableTasks) => {
+  return processedTasks / (processedTasks + availableTasks)
 }
 
 const start = () => {
@@ -112,7 +117,7 @@ const start = () => {
     state: psstState.STARTED,
     tasks_list: tasks,
     start_url: curUrl,
-    progress: calculateProgress(PSST_TASKS),
+    progress: calculateProgress(0, PSST_TASKS_LENGTH),
     current_task: next_task,
     errors: {},
     applied:[]
@@ -183,8 +188,8 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
     nextUrl = next_task.url
   }
 
-  psstObj.progress = calculateProgress(getProcessedTasks(psst))
   psstObj.current_task = next_task
+  psstObj.progress = calculateProgress(getProcessedTasks(psstObj), getAvailableTasks(psstObj))
 
   saveAndGoToNextUrl(psstObj, nextUrl)
   return {
