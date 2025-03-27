@@ -39,7 +39,7 @@
       },
       {
         url: 'https://x.com/settings/data_sharing_with_business_partners',
-        description: 'Disable sharing additional information with X’s business partners.'
+        description: 'Disable sharing additional information with business partners'
       },
       {
         url: 'https://x.com/settings/off_twitter_activity',
