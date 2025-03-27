@@ -68,50 +68,42 @@ In ca the <linkedin user ID> extracting is impossible it must return null
   return {
     user: getUid(),
     tasks: [
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
-        description: 'Disable cookies'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
-        description: 'Disable your data sharing with third parties'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-location',
-        description: 'Profile Location'
-      },
-          {
-            url: 'https://www.linkedin.com/mypreferences/d/settings/linked-in-activity-data',
-            description: 'LinkedIn activity data'
-          },
-          {
-            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-inferred-location',
-            description: 'Ads based on Inferred city location'
-          },
-          {
-            url: 'https://www.linkedin.com/mypreferences/d/interest-categories',
-            description: 'Ads based on Inferred interests and traits'
-          },
-          {
-            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-age',
-            description: 'Ads based on Inferred age range'
-          },
-          {
-            url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-gender',
-            description: 'Ads based on Inferred gender'
-          },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-beyond-linkedin',
-        description: 'Ad Partners Data for Ads off LinkedIn'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business',
-        description: 'Advertiser data for ads'
-      },
-      {
-        url: 'https://www.linkedin.com/mypreferences/d/settings/ads-related-actions',
-        description: 'Measure ad success'
-      }
-    ]
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
+          description: 'Disable all non-essential cookies'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/policy-and-academic-research',
+          description: 'Disable sharing your data for research with trusted third parties'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-inferred-location',
+          description: 'Disable personalizing ads based on inferred city location'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/interest-categories',
+          description: 'Disable personalizing ads based on inferred interests and traits'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-age',
+          description: 'Disable personalizing ads based on age range'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-by-gender',
+          description: 'Disable personalizing ads based on inferred gender'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-beyond-linkedin',
+          description: 'Disable personalized ads off of LinkedIn'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-interactions-with-business',
+          description: 'Disable personalized ads based on data given to businesses'
+        },
+        {
+          url: 'https://www.linkedin.com/mypreferences/d/settings/ads-related-actions',
+          description: 'Disable using your data for ad insights'
+        }
+  ]
   }
 })()
