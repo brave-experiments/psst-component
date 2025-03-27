@@ -35,19 +35,19 @@
     tasks: [
       {
         url: 'https://x.com/settings/location',
-        description: 'Location'
+        description: 'Disable attaching location information to posts'
       },
       {
         url: 'https://x.com/settings/data_sharing_with_business_partners',
-        description: 'Data sharing with business partners'
+        description: 'Disable sharing additional information with X’s business partners.'
       },
       {
         url: 'https://x.com/settings/off_twitter_activity',
-        description: 'Twitter Activity'
+        description: 'Disable personalization based on your inferred identity'
       },
       {
         url: 'https://x.com/settings/ads_preferences',
-        description: 'Ads Preferences'
+        description: 'Disable personalized ads'
       }
     ]
   }
