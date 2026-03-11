@@ -8,6 +8,7 @@ Extracts end returns the LinkedIn user ID
 Returns the dictionary object:
 {
 "user": <linkedin user ID>,
+"is_initial": <true if it is first iteration>
 "tasks": [
   {
     url: 'https://www.linkedin.com/mypreferences/d/member-cookies',
@@ -20,15 +21,10 @@ In ca the <linkedin user ID> extracting is impossible it must return null
 */
 
 (() => {
-  // Flag which is present only for the first (initial) execution of the policy script
-  const PSST_INITIAL_EXECUTION_FLAG = params.initial_execution ?? false
-
   const SIGNED_USER_LS_KEY_NAME = 'voyager'
   const PSST_PUBLIC_ID_COOKIE_NAME = 'psst_public_identifier'
   const CODE_ELEM_JSON_IDENTIFIER =
     'com.linkedin.voyager.identity.shared.PublicContactInfo'
-
-  const psst = window.parent.localStorage.getItem('psst')
 
   const hasLocalStorageKeyStartingWith = prefix =>
     Object.keys(localStorage).some(key => key.startsWith(prefix))
@@ -42,6 +38,18 @@ In ca the <linkedin user ID> extracting is impossible it must return null
   const getCookie = name => {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
     return match ? match[2] : null
+  }
+  
+  const isInitial = () => {
+    const psst = window.parent.localStorage.getItem('psst');
+    if(!psst)
+      return true
+      
+    const psstObj = JSON.parse(psst);
+    if(!psstObj)
+      return true
+      
+    return psstObj.state === "completed"
   }
 
   const getUid = () => {
@@ -67,6 +75,9 @@ In ca the <linkedin user ID> extracting is impossible it must return null
   }
   return {
     user: getUid(),
+    is_initial: isInitial(),
+    share_experience_link: "https://www.linkedin.com/feed/?shareActive=true&text=$1",
+    name: 'www.linkedin.com',
     tasks: [
         {
           url: 'https://www.linkedin.com/mypreferences/d/member-cookies',

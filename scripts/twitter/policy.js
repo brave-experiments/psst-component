@@ -62,6 +62,8 @@ const PSST_TASKS_LENGTH = params.tasks?.length ?? 0
 // Flag which is present only for the first (initial) execution of the policy script
 const PSST_INITIAL_EXECUTION_FLAG = params.initial_execution ?? false
 
+const PSST_LOCALSTORAGE_KEY = 'psst'
+
 // State of operations
 const psstState = {
   STARTED: "started",
@@ -126,7 +128,7 @@ const start = () => {
 }
 const saveAndGoToNextUrl = (psst, nextUrl) => {
   // Save the psst object to local storage.
-  window.parent.localStorage.setItem('psst', JSON.stringify(psst))
+  window.parent.localStorage.setItem(PSST_LOCALSTORAGE_KEY, JSON.stringify(psst))
   // Go to the next URL.
   goToUrl(nextUrl)
 }
@@ -134,8 +136,7 @@ const saveAndGoToNextUrl = (psst, nextUrl) => {
 // Main execution logic.
 (async () => {
   // Get psst variables from local storage.
-  const psst = window.parent.localStorage.getItem('psst')
-
+  const psst = window.parent.localStorage.getItem(PSST_LOCALSTORAGE_KEY)
   if (!psst || PSST_INITIAL_EXECUTION_FLAG) {
     // Start applying-policy
     const [psst, nextUrl] = start()

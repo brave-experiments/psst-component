@@ -8,6 +8,8 @@
  Returns the dictionary object:
  {
   "user": <twid>,
+  "share_experience_link": "https://x.com/intent/post?text=$1",
+  "name": <Name of the site ex: x.com,
   "tasks": { 
       {
         url:<setting url, MUST BE UNIQUE>,
@@ -32,6 +34,8 @@
 
   return {
     user: getTwId(),
+    share_experience_link: "https://x.com/intent/post?text=$1",
+    name: 'x.com',
     tasks: [
       {
         url: 'https://x.com/settings/location',
@@ -39,7 +43,7 @@
       },
       {
         url: 'https://x.com/settings/data_sharing_with_business_partners',
-        description: 'Disable sharing additional information with business partners'
+        description: 'Disable sharing additional information with X’s business partners.'
       },
       {
         url: 'https://x.com/settings/off_twitter_activity',
