@@ -1,0 +1,10 @@
+{
+  // Type-checking config for tests only (editor / `tsc --noEmit -p tsconfig.test.json`).
+  // The build (tsconfig.json) excludes tests so they never land in out/.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["./src/**/*", "./tests/**/*"]
+}

@@ -1,0 +1,20 @@
+{
+  // Config for running the build scripts with ts-node.
+  //
+  // The shared tsconfig.json targets the browser bundle (module: ESNext,
+  // verbatimModuleSyntax). ts-node runs under Node's CommonJS loader, which
+  // silently fails to execute ESNext-module output, so we override the module
+  // settings here. transpileOnly skips type-checking the whole src tree — we
+  // only need to execute the script to read each UserScript's metadata.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "verbatimModuleSyntax": false,
+    "types": ["node"],
+    "noEmit": false
+  },
+  "ts-node": {
+    "transpileOnly": true
+  },
+  "include": ["./**/*", "../src/**/*"]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "psst-component-test-typescript",
+  "version": "1.0.0",
+  "description": "PSST scripts project",
+  "scripts": {
+    "build": "tsc",
+    "prebundle:dev": "ts-node --project scripts/tsconfig.json scripts/generate-psst-config.ts",
+    "prebundle:prod": "ts-node --project scripts/tsconfig.json scripts/generate-psst-config.ts",
+    "bundle": "webpack --config webpack.config.js --mode development",
+    "bundle:dev": "webpack --config webpack.config.js --mode development",
+    "bundle:prod": "webpack --config webpack.config.js --mode production",
+    "test": "vitest run"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "25.6.0",
+    "jsdom": "29.1.1",
+    "swf": "1.0.0",
+    "ts-loader": "9.5.7",
+    "ts-node": "10.9.2",
+    "typescript": "6.0.3",
+    "vite": "8.0.16",
+    "vitest": "4.1.8",
+    "webpack": "5.106.2",
+    "webpack-cli": "7.0.2"
+  }
+}
